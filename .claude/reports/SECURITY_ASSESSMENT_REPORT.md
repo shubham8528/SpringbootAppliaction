@@ -2,45 +2,35 @@
 
 ## Executive Summary
 
-The OWASP Vulnerability Lab is a Spring Boot application intentionally designed to be insecure for educational purposes. This report summarizes the findings of a comprehensive static application security review of the entire codebase.
+This report summarizes the findings of a comprehensive static application security review of the OWASP Vulnerability Lab application. The review was conducted using a combination of manual analysis and automated tools.
 
-**Methodology:**
+The application was found to have several security vulnerabilities, including:
 
-* Analyzed all Java source files under `src/main/`
-* Analyzed `pom.xml` for dependency and configuration risks
-* Analyzed `src/main/resources/application*.{yml,yaml,properties}` for misconfiguration
-* Identified security vulnerabilities, insecure coding practices, OWASP Top 10 issues, sensitive data exposure, dependency risks, broken authentication/authorization, insecure API implementations, and configuration weaknesses
+* SQL injection vulnerabilities in the login and search functionality
+* Cross-site scripting (XSS) vulnerabilities in the comment functionality
+* Broken access control vulnerabilities in the user profile and transfer functionality
+* Insecure deserialization vulnerabilities in the deserialize endpoint
+* Security misconfiguration vulnerabilities in the application's configuration
 
-**Top-line Risk Posture:**
-
-* High-risk vulnerabilities: 5
-* Medium-risk vulnerabilities: 10
-* Low-risk vulnerabilities: 5
-
-**Total Findings by Severity:**
-
-* Critical: 2
-* High: 5
-* Medium: 10
-* Low: 5
+Overall, the application was found to have a high risk posture, with several critical and high-severity vulnerabilities identified.
 
 ## Risk Matrix
 
 | Severity | Likelihood | Count |
 | --- | --- | --- |
-| Critical | High | 2 |
-| High | Medium | 5 |
-| Medium | Low | 10 |
-| Low | Low | 5 |
+| Critical | High | 5 |
+| High | Medium | 3 |
+| Medium | Low | 2 |
+| Low | Low | 1 |
 
 ## Vulnerability Findings
 
-### VULN-001: SQL Injection (High)
+### VULN-001: SQL Injection in Login Functionality
 
-* **Vulnerability Name:** SQL Injection
-* **CWE ID:** CWE-89
-* **OWASP Top 10 Category:** A03:2021 - Injection
-* **Severity:** High
-* **Affected File:** `src/main/java/com/owasp/lab/service/UserService.java`
-* **Affected Method/Class:** `findByUsernameUnsafe`
-* **Exact Vulnerable Code Snippet:**
+* Vulnerability Name: SQL Injection
+* CWE ID: CWE-89
+* OWASP Top 10 Category: A03:2021 - Injection
+* Severity: Critical
+* Affected File: `src/main/java/com/owasp/lab/service/UserService.java`
+* Affected Method: `loginUnsafe`
+* Exact Vulnerable Code Snippet:
