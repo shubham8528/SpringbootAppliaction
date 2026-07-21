@@ -6,10 +6,10 @@ name: Build & Security (NVIDIA CI pipeline)
 on:
   push:
     branches:
-      - feature/nvidia-git-agent
+      - main
   pull_request:
     branches:
-      - feature/nvidia-git-agent
+      - main
   workflow_dispatch:
 
 # Workflow-wide defaults. Per-job permissions override these.
@@ -554,10 +554,10 @@ jobs:
 
       # -----------------------------------------------------------
       # 2f. NVIDIA push — creates a per-development-branch chain step.
-      #     Branch family: feature/nvidia-git-agent_<N>_<TIMESTAMP>.
+      #     Branch family: main_<N>_<TIMESTAMP>.
       #     The parent of push #N is the previous push #(N-1)'s tip
-      #     (i.e. the tip of feature/nvidia-git-agent_<MAX_N>_*), or
-      #     the development branch feature/nvidia-git-agent itself if
+      #     (i.e. the tip of main_<MAX_N>_*), or
+      #     the development branch main itself if
       #     no numbered push exists yet.
       #     The push step itself is model-free — the scan + remediate
       #     jobs are the only places the model is used.
@@ -567,9 +567,9 @@ jobs:
         env:
           # Family prefix for the chain steps created by this workflow.
           # Change this if the development branch is renamed.
-          CHAIN_PREFIX: feature/nvidia-git-agent
+          CHAIN_PREFIX: main
           # Development branch the chain hangs off (parent of push #1).
-          DEVELOPMENT_BRANCH: feature/nvidia-git-agent
+          DEVELOPMENT_BRANCH: main
         run: |
           set -euo pipefail
 
@@ -769,11 +769,11 @@ jobs:
           fi
 
           # Sanity: never push report updates to a chain step. The chain
-          # step is always `${CHAIN_PREFIX}_<N>_<TS>` (e.g. feature/nvidia-git-agent_1_…)
+          # step is always `${CHAIN_PREFIX}_<N>_<TS>` (e.g. main_1_…)
           # — we must not accidentally commit reports there. Reports
           # belong on the development branch (the trigger).
           case "$TRIGGER_BRANCH" in
-            feature/nvidia-git-agent_[0-9]*_*)
+            main_[0-9]*_*)
               echo "::error::Refusing to push report updates to a chain step branch: $TRIGGER_BRANCH"
               exit 1
               ;;
